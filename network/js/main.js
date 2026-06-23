@@ -99,7 +99,7 @@ function initSigma(config) {
 				// alert(b.x);
 
                 //change group names
-                var group = b.attr && b.attr.attributes && b.attr.attributes.knownfor;
+                var group = b.attr && b.attr.attributes && b.attr.attributes["Known For"];
                 if (!group) group = "Other"; 
 				
                 a.clusters[group] || (a.clusters[group] = []);
@@ -111,7 +111,7 @@ function initSigma(config) {
 		groupColors = {}
 
 		a.iterNodes(function(n) {
-			var group = n.attr.attributes.knownfor;
+			var group = n.attr.attributes["Known For"];
 			if (!groupColors[group]) {
 				groupColors[group] = n.color;
 			}
