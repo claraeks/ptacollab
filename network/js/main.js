@@ -57,7 +57,7 @@ function initSigma(config) {
         defaultHoverLabelBGColor: "#002147",
         defaultLabelHoverColor: "#fff",
         labelThreshold: 10,
-        defaultEdgeType: "curve",
+        defaultEdgeType: "line",
         hoverFontStyle: "bold",
         fontStyle: "bold",
         activeFontStyle: "bold"
@@ -68,9 +68,9 @@ function initSigma(config) {
     else
     	graphProps={
         minNodeSize: 1,
-        maxNodeSize: 7,
-        minEdgeSize: 0.2,
-        maxEdgeSize: 0.5
+        maxNodeSize: 10,
+        minEdgeSize: 0.5,
+        maxEdgeSize: 2
     	};
 	
 	if (config.sigma && config.sigma.mouseProperties) 
@@ -97,12 +97,26 @@ function initSigma(config) {
 				// note: index may not be consistent for all nodes. Should calculate each time. 
 				 // alert(JSON.stringify(b.attr.attributes[5].val));
 				// alert(b.x);
-				a.clusters[b.color] || (a.clusters[b.color] = []);
-				a.clusters[b.color].push(b.id);//SAH: push id not label
+
+                //change group names
+                var group = b.attr && b.attr.attributes && b.attr.attributes.knownfor;
+                if (!group) group = "Other"; 
+				
+                a.clusters[group] || (a.clusters[group] = []);
+				a.clusters[group].push(b.id);//SAH: push id not label
 			}
 		
 		);
-	
+        //give groups colors
+		groupColors = {}
+
+		a.iterNodes(function(n) {
+			var group = n.attr.attributes.knownfor;
+			if (!groupColors[group]) {
+				groupColors[group] = n.color;
+			}
+		});
+
 		a.bind("upnodes", function (a) {
 		    nodeActive(a.content[0])
 		});
@@ -277,7 +291,7 @@ function configSigmaElements(config) {
     $GP.bg2 = $(sigInst._core.domElements.bg2);
     var a = [],
         b,x=1;
-		for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + b + ';display:inline-block"></div> Group ' + (x++) + ' (' + sigInst.clusters[b].length + ' members)</a></div>');
+		for (b in sigInst.clusters) a.push('<div style="line-height:12px"><a href="#' + b + '"><div style="width:40px;height:12px;border:1px solid #fff;background:' + groupColors[b] + ';display:inline-block"></div> ' + b + ' (' + sigInst.clusters[b].length + ' members)</a></div>');
     //a.sort();
     $GP.cluster.content(a.join(""));
     b = {
