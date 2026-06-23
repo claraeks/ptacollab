@@ -566,6 +566,7 @@ function nodeActive(a) {
             b = a.attr("rel");
     });
     f = b.attr;
+    
     if (f.attributes) {
   		var image_attribute = false;
   		if (config.informationPanel.imageAttribute) {
@@ -574,10 +575,15 @@ function nodeActive(a) {
         e = [];
         temp_array = [];
         g = 0;
+        
         for (var attr in f.attributes) {
             var d = f.attributes[attr],
                 h = "";
-			if (attr!=image_attribute) {
+            //clickable link for film page
+            if (attr === "Film Page") {
+            h = '<span><strong>' + attr + ':</strong> <a href="' + d + '" target="_blank">' + d + '</a></span><br/>';
+        }
+			else if (attr!=image_attribute) {
                 h = '<span><strong>' + attr + ':</strong> ' + d + '</span><br/>'
 			}
             //temp_array.push(f.attributes[g].attr);
@@ -592,6 +598,7 @@ function nodeActive(a) {
         }
         // Image field for attribute pane
         $GP.info_data.html(e.join("<br/>"))
+        
     }
     $GP.info_data.show();
     $GP.info_p.html("Connections:");
