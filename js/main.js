@@ -81,11 +81,39 @@ function initSigma(config) {
         maxRatio: 20, // How far can we zoom in?
     	};
 	
+
     var a = sigma.init(document.getElementById("sigma-canvas")).drawingProperties(drawProps).graphProperties(graphProps).mouseProperties(mouseProps);
+    // --- HiDPI / Retina Fix for Sigma.js v1 ---
+// Scale all canvas layers by devicePixelRatio
+var ratio = window.devicePixelRatio || 1;
+var canvases = a._core.domElements;
+
+['bg', 'bg2', 'nodes', 'edges', 'labels', 'hovers'].forEach(function(layer) {
+    var c = canvases[layer];
+    if (!c) return;
+
+    var w = c.width;
+    var h = c.height;
+
+    // Increase physical pixel resolution
+    c.width = w * ratio;
+    c.height = h * ratio;
+
+    // Keep CSS size the same
+    c.style.width = w + "px";
+    c.style.height = h + "px";
+
+    // Scale drawing context
+    var ctx = c.getContext("2d");
+    ctx.scale(ratio, ratio);
+});
+
     sigInst = a;
     a.active = !1;
     a.neighbors = {};
     a.detail = !1;
+
+
 
 
     dataReady = function() {//This is called as soon as data is loaded
