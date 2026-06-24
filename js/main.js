@@ -83,6 +83,12 @@ function initSigma(config) {
 	
 
     var a = sigma.init(document.getElementById("sigma-canvas")).drawingProperties(drawProps).graphProperties(graphProps).mouseProperties(mouseProps);
+
+
+    sigInst = a;
+    a.active = !1;
+    a.neighbors = {};
+    a.detail = !1;
     // --- HiDPI / Retina Fix for Sigma.js v1 ---
 // Scale all canvas layers by devicePixelRatio
 var ratio = window.devicePixelRatio || 1;
@@ -107,12 +113,6 @@ var canvases = a._core.domElements;
     var ctx = c.getContext("2d");
     ctx.scale(ratio, ratio);
 });
-
-    sigInst = a;
-    a.active = !1;
-    a.neighbors = {};
-    a.detail = !1;
-
 
 
 
